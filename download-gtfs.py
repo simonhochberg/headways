@@ -14,7 +14,7 @@ import zipfile
 
 listOfAgencyIDs = []
 api_key = "94413ac9-aec7-4720-a731-640e98d65763" # this is my API key; replace with your own
-r_url = "https://api.transitfeeds.com/v1/getFeeds?key={}&location=67&descendants=1&limit=100".format(api_key)
+r_url = f"https://api.transitfeeds.com/v1/getFeeds?key={api_key}&location=67&descendants=1&limit=100"
 r = requests.get(r_url)
 
 # This sequence checks to see if a JSON with the last update times exists
@@ -55,7 +55,7 @@ for page in range(1,(numPages+1)):
 
 # download zipped GTFS data for each agency
 for feed in listOfAgencyIDs:
-    url = "https://api.transitfeeds.com/v1/getLatestFeedVersion?key={}&feed={}".format(api_key, feed)
+    url = f"https://api.transitfeeds.com/v1/getLatestFeedVersion?key={api_key}&feed={feed}"
     g = requests.get(url)
     slashRemoval = "--".join(feed.split("/"))
     filename = "{}.zip".format(slashRemoval)
@@ -66,7 +66,7 @@ for feed in listOfAgencyIDs:
 # unzip downloaded GTFS data in a new directory called "gtfs"
 for feed in listOfAgencyIDs:
     slashRemoval = "--".join(feed.split("/"))
-    path = "{}.zip".format(slashRemoval)
+    path = f"{slashRemoval}.zip"
     new_path = "gtfs/{}".format(slashRemoval)
     try:
         zip_ref = zipfile.ZipFile(path, "r")
@@ -78,6 +78,6 @@ for feed in listOfAgencyIDs:
         os.remove(path)
 
 
-note_to_write = "downloaded from https://transitfeeds.com on {}".format(str(datetime.date.today()))
+note_to_write = f"downloaded from https://transitfeeds.com on {str(datetime.date.today())}"
 with open("gtfs/README.txt", "w") as text_file:
     text_file.write(note_to_write) 
